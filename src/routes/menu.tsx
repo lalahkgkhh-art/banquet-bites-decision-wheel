@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { menuQuery } from "@/lib/menu-queries";
-import { menuImage } from "@/lib/menu-images";
+import { menuImage, menuThumbWebp } from "@/lib/menu-images";
+import { LOGO_JPEG, LOGO_WEBP } from "@/lib/logo";
+import { MenuPhoto } from "@/components/menu/MenuPhoto";
 import { useMemo, useState } from "react";
 import { FerrisWheel, Heart, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-const logoAsset = { url: "/menu/ec4251e9-ummasbun-coffee-logo.jpeg" };
 import { ProductSheet } from "@/components/menu/ProductSheet";
 import { CommentBox } from "@/components/menu/CommentBox";
 import { GuestWheel } from "@/components/menu/GuestWheel";
@@ -61,13 +62,18 @@ function Menu() {
     <main className="mx-auto min-h-screen w-full max-w-lg px-4 pb-10">
       <header className="relative -mx-4 h-44 overflow-hidden bg-cream">
         <Button type="button" variant="secondary" size="icon" onClick={() => setWheel(true)} aria-label="Lucky Wheel" title="Lucky Wheel" className="absolute left-4 top-4 z-10 size-11 rounded-full [&_svg]:size-6"><FerrisWheel strokeWidth={1.75} /></Button>
-        <img
-          src={logoAsset.url}
-          alt="Ummasbun Coffee"
-          width={1024}
-          height={398}
-          className="absolute inset-0 h-full w-full object-cover object-top"
-        />
+        <picture>
+          <source srcSet={LOGO_WEBP} type="image/webp" />
+          <img
+            src={LOGO_JPEG}
+            alt="Ummasbun Coffee"
+            width={1024}
+            height={398}
+            loading="eager"
+            fetchPriority="high"
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+        </picture>
       </header>
 
       <CommentBox />
@@ -107,12 +113,12 @@ function Menu() {
         <p className="mt-10 text-center text-sm text-muted-foreground">The coffee you're looking for isn't on the menu.</p>
       ) : (
         <div className="mt-5 grid grid-cols-2 gap-4">
-          {visible.map((item) => {
+          {visible.map((item, index) => {
             const fav = favs.includes(item.id);
             return (
               <article key={item.id} className="card-press cursor-pointer rounded-3xl bg-card p-2.5" role="button" tabIndex={0} aria-label={`${item.name} details`} onClick={() => setOpenId(item.id)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpenId(item.id); } }}>
                 <div className="relative">
-                  <img src={item.img} alt={item.name} loading="lazy" width={816} height={816}
+                  <MenuPhoto src={item.img} webp={menuThumbWebp(item.img)} alt={item.name} size={480} priority={index < 2}
                     className="aspect-square w-full rounded-2xl object-cover" />
                   <button aria-label="Favorite"
                     onClick={(e) => { e.stopPropagation(); toggleFav(item.id); }}

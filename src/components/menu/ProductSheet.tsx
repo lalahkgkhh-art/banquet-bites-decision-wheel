@@ -1,5 +1,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Heart, X } from "lucide-react";
+import { menuFullWebp } from "@/lib/menu-images";
+import { MenuPhoto } from "./MenuPhoto";
 
 export type ProductDetail = { id: string; name: string; categoryName?: string | undefined; price: number; old?: number | undefined; img: string; desc: string };
 
@@ -17,7 +19,7 @@ export function ProductSheet({ item, fav, onToggleFav, onClose }: { item: Produc
         >
           {item && <>
             <div className="relative">
-              <img src={item.img} alt={item.name} className="aspect-square w-full rounded-2xl object-cover" />
+              <MenuPhoto src={item.img} webp={menuFullWebp(item.img)} alt={item.name} size={800} priority className="aspect-square w-full rounded-2xl object-cover" />
               <DialogPrimitive.Close aria-label="Close" className={`absolute left-2 top-2 ${roundButton}`}><X className="size-4" /></DialogPrimitive.Close>
               <button type="button" onClick={onToggleFav} aria-label="Favorite" className={`absolute right-2 top-2 ${roundButton}`}><Heart className={`size-4 ${fav ? "fill-primary text-primary" : ""}`} /></button>
             </div>

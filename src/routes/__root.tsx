@@ -11,6 +11,16 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { LOGO_WEBP } from "../lib/logo";
+
+// Warm up the connection to the backend early (read from the public VITE_ variable).
+const backendOrigin = (() => {
+  try {
+    return new URL(import.meta.env["VITE_SUPABASE_URL"] as string).origin;
+  } catch {
+    return null;
+  }
+})();
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -93,8 +103,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" },
+      { rel: "preload", as: "image", href: LOGO_WEBP, type: "image/webp", fetchPriority: "high" },
+      ...(backendOrigin
+        ? [
+            { rel: "preconnect", href: backendOrigin, crossOrigin: "anonymous" as const },
+            { rel: "dns-prefetch", href: backendOrigin },
+          ]
+        : []),
       { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),

@@ -1,6 +1,10 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+/* Outfit served locally (font-display: swap) instead of render-blocking Google Fonts CSS. */
+@import "@fontsource/outfit/400.css";
+@import "@fontsource/outfit/500.css";
+@import "@fontsource/outfit/600.css";
 
 @custom-variant dark (&:is(.dark *));
 
